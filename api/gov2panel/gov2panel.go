@@ -181,8 +181,9 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 	userList := make([]api.UserInfo, len(users))
 	for i := 0; i < len(users); i++ {
 		u := api.UserInfo{
-			UID:  users[i].Id,
-			UUID: users[i].Uuid,
+			UID:         users[i].Id,
+			UUID:        users[i].Uuid,
+			DeviceLimit: users[i].DeviceLimit,
 		}
 
 		// Support 1.7.1 speed limit
@@ -192,7 +193,9 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 			u.SpeedLimit = uint64(users[i].SpeedLimit * 1000000 / 8)
 		}
 
-		u.DeviceLimit = c.DeviceLimit // todo waiting v2board send configuration
+		if u.DeviceLimit == 0 {
+			u.DeviceLimit = c.DeviceLimit
+		}
 		u.Email = u.UUID + "@gov2panel.user"
 		if c.NodeType == "Shadowsocks" {
 			u.Passwd = u.UUID
