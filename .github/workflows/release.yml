@@ -103,14 +103,14 @@ jobs:
               HASH="$(curl -sL "${DOWNLOAD_URL}.sha256sum" | awk -F ' ' '{print $1}')"
               [ "$(sha256sum "./build_assets/${FILE_NAME}" | awk -F ' ' '{print $1}')" == "${HASH}" ] || { echo -e "The HASH key of ${FILE_NAME} does not match cloud one."; exit 1; }
             done
-      - name: Create archive
+      - name: Create ZIP archive
         shell: bash
         run: |
           pushd build_assets || exit 1
           touch -mt $(date +%Y01010000) *
-          tar -zcf ../XrayR-$ASSET_NAME.tarz .
+          zip -9vr ../XrayR-$ASSET_NAME.zip .
           popd || exit 1
-          FILE=./XrayR-$ASSET_NAME.tarz
+          FILE=./XrayR-$ASSET_NAME.zip
           DGST=$FILE.dgst
           for METHOD in {"md5","sha1","sha256","sha512"}
           do
@@ -130,6 +130,6 @@ jobs:
         if: github.event_name == 'release'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./XrayR-${{ steps.get_filename.outputs.ASSET_NAME }}.tarz*
+          file: ./XrayR-${{ steps.get_filename.outputs.ASSET_NAME }}.zip*
           tag: ${{ github.ref }}
           file_glob: true
