@@ -27,13 +27,13 @@
     "friendlyName": "linux-32"
   },
   "linux-amd64": {
-    "friendlyName": "linux-64"
+    "friendlyName": "linux_x86_64"
   },
   "linux-arm5": {
     "friendlyName": "linux-arm32-v5"
   },
   "linux-arm64": {
-    "friendlyName": "linux-arm64-v8a"
+    "friendlyName": "linux_aarch64"
   },
   "linux-arm6": {
     "friendlyName": "linux-arm32-v6"
