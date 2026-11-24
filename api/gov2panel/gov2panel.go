@@ -166,7 +166,10 @@ func (c *APIClient) GetUserListContext(ctx context.Context) (UserList *[]api.Use
 			u.SpeedLimit = uint64(users[i].SpeedLimit * 1000000 / 8)
 		}
 
-		u.DeviceLimit = c.DeviceLimit // todo waiting v2board send configuration
+		u.DeviceLimit = users[i].DeviceLimit
+		if u.DeviceLimit == 0 {
+			u.DeviceLimit = c.DeviceLimit
+		}
 		u.Email = u.UUID + "@gov2panel.user"
 		if c.NodeType == "Shadowsocks" {
 			u.Passwd = u.UUID

@@ -153,7 +153,11 @@ func TestContractGetUserList(t *testing.T) {
 	requests := make(chan capturedRequest, 1)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requests <- captureRequest(r)
-		writeResponse(w, http.StatusOK, `{"code":0,"data":{"users":[{"id":9,"uuid":"98a30d33-3214-4d85-82ee-efbbce687561","speed_limit":24}]}}`)
+		writeResponse(w, http.StatusOK, `{"code":0,"data":{"users":[
+			{"id":9,"uuid":"98a30d33-3214-4d85-82ee-efbbce687561","speed_limit":24,"device_limit":1},
+			{"id":10,"uuid":"98a30d33-3214-4d85-82ee-efbbce687562","device_limit":0},
+			{"id":11,"uuid":"98a30d33-3214-4d85-82ee-efbbce687563"}
+		]}}`)
 	}))
 	defer server.Close()
 
@@ -166,8 +170,20 @@ func TestContractGetUserList(t *testing.T) {
 		UUID:        "98a30d33-3214-4d85-82ee-efbbce687561",
 		Passwd:      "98a30d33-3214-4d85-82ee-efbbce687561",
 		SpeedLimit:  3_000_000,
-		DeviceLimit: 3,
+		DeviceLimit: 1,
 		Email:       "98a30d33-3214-4d85-82ee-efbbce687561@gov2panel.user",
+	}, {
+		UID:         10,
+		UUID:        "98a30d33-3214-4d85-82ee-efbbce687562",
+		Passwd:      "98a30d33-3214-4d85-82ee-efbbce687562",
+		DeviceLimit: 3,
+		Email:       "98a30d33-3214-4d85-82ee-efbbce687562@gov2panel.user",
+	}, {
+		UID:         11,
+		UUID:        "98a30d33-3214-4d85-82ee-efbbce687563",
+		Passwd:      "98a30d33-3214-4d85-82ee-efbbce687563",
+		DeviceLimit: 3,
+		Email:       "98a30d33-3214-4d85-82ee-efbbce687563@gov2panel.user",
 	}}
 	if !reflect.DeepEqual(*users, want) {
 		t.Fatalf("users = %#v, want %#v", *users, want)
